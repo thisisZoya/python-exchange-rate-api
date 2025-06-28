@@ -13,5 +13,5 @@ def archive(filename, rates):
         f.write(json.dumps(rates))
 
 if __name__ == "__main__":
-    response = get_rates()
-    archive(response["timestamp"], response["rates"])
+    rates = get_rates()
+    archive(rates["timestamp"], rates["rates"])
