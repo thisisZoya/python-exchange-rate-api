@@ -1,5 +1,13 @@
-BASE_PATH = "http://data.fixer.io/api/latest?access_key="
-
-API_KEY = "efe52a5e4930acf3b4cc0d0047d28d60"
+BASE_PATH = 'http://data.fixer.io/api/latest?access_key='
+API_KEY = '1efae8c05a77a3bafc8754fbd12e43f2'
 
 url = BASE_PATH + API_KEY
+
+EMAIL_RECEIVER = "test@example.com"
+rules = {
+    'archive': True,
+    'send_mail': True,
+    # preferred default is None
+    # 'preferred': None
+    'preferred': ['BTC', 'IRR', "IQD", "USD", "CAD", "AED"]
+}
