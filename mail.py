@@ -2,7 +2,7 @@
 # import requests
 import smtplib
 from email.mime.text import MIMEText
-from config import EMAIL_RECEIVER
+from config import EMAIL_RECEIVER, rules
 
 # from config import EMAIL_RECEIVER
 # from local_config import MAILGUN_APIKEY
@@ -50,7 +50,7 @@ from config import EMAIL_RECEIVER
 #     msg = MIMEText(body)
 #     msg['Subject'] = subject
 #     msg['From'] = "finance@inprobes.com"
-#     msg['To'] = EMAIL_RECEIVER
+#     msg['To'] = rules['email']['receiver']
 
 #     with smtplib.SMTP('smtp.mailgun.org', 587) as mail_server:
 #         mail_server.login('postmaster@mg.inprobes.com', MAILGUN_APIKEY)
@@ -68,7 +68,7 @@ def send_smtp_email(subject, body):
     msg = MIMEText(body)
     msg['Subject'] = subject
     msg['From'] = "Private Person <from@example.com>"
-    msg['To'] = EMAIL_RECEIVER
+    msg['To'] = rules['email']['receiver']
 
     with smtplib.SMTP(MAILTRAP_HOST, MAILTRAP_PORT) as server:
         server.starttls()

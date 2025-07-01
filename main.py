@@ -3,7 +3,7 @@ import json
 
 from config import url, rules
 from mail import send_smtp_email
-
+from notification import send_msg
 
 def get_rates():
     """
@@ -37,9 +37,9 @@ def send_mail(timestamp, rates):
     """
     subject = f'{timestamp} rates'
 
-    if rules['preferred'] is not None:
+    if rules['email']['preferred'] is not None:
         tmp = dict()
-        for exc in rules['preferred']:
+        for exc in rules['email']['preferred']:
             tmp[exc] = rates[exc]
         rates = tmp
 
@@ -48,11 +48,40 @@ def send_mail(timestamp, rates):
     send_smtp_email(subject, text)
 
 
+def check_notify_rules(rates):
+    '''
+    check if the rates are in the preferred range and if user defined  
+    :param rates:
+    :return: msg(string)
+    '''
+    preferred = rules['notification']['preferred']
+    msg = ''
+    for exc in preferred.keys():
+        min_val = float(preferred[exc]['min'])
+        max_val = float(preferred[exc]['max'])
+
+        if rates[exc] <= min_val:
+            msg += f'{exc} is below the minimum value {rates[exc]}\n'
+        if rates[exc] >= max_val:
+            msg += f'{exc} is above the maximum value {rates[exc]}\n'
+    print(msg)
+    return msg
+ 
+def send_notification(msg):
+    send_msg(msg)
+    
+
+
 if __name__ == "__main__":
     res = get_rates()
 
     if rules['archive']:
         archive(res['timestamp'], res['rates'])
 
-    if rules['send_mail']:
+    if rules['email']['enable']:
         send_mail(res['timestamp'], res['rates'])
+
+    if rules['notification']['enable']:
+        notification_msg = check_notify_rules(res['rates'])
+        if notification_msg:
+            send_notification(notification_msg)
