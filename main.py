@@ -1,9 +1,12 @@
 import requests
 import json
+from khayyam import JalaliDatetime
+from datetime import datetime, timedelta
 
 from config import url, rules
 from mail import send_smtp_email
 from notification import send_msg
+import os
 
 def get_rates():
     """
@@ -23,7 +26,10 @@ def archive(filename, rates):
     :param rates:
     :return: None
     """
-    with open(f'archive/{filename}.json', 'w') as f:
+    archive_dir = os.path.join(os.path.dirname(__file__), 'archive')
+    os.makedirs(archive_dir, exist_ok=True)
+
+    with open(os.path.join(archive_dir, f"{filename}.json"), "w") as f:
         f.write(json.dumps(rates))
 
 
@@ -35,7 +41,8 @@ def send_mail(timestamp, rates):
     :param rates:
     :return:
     """
-    subject = f'{timestamp} rates'
+    now = JalaliDatetime(datetime.now()).strftime('%y-%B-%d  %A  %H:%M')
+    subject = f'{timestamp} - {now} - rates'
 
     if rules['email']['preferred'] is not None:
         tmp = dict()
@@ -68,6 +75,9 @@ def check_notify_rules(rates):
     return msg
  
 def send_notification(msg):
+    now = JalaliDatetime(datetime.now()).strftime('%y-%B-%d  %A  %H:%M') 
+    # now = JalaliDatetime(timedelta.now()).strftime('%y-%B-%d  %A  %H:%M')
+    msg += now
     send_msg(msg)
     
 
