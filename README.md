@@ -123,8 +123,3 @@ If everything is configured properly, it will:
 - Convert to a REST API
 
 ---
-
-## 👨‍💻 Developer
-
-Project by [Hossein Mousavi](https://github.com/hu3ein)  
-Feel free to collaborate, suggest improvements, or fork this repository.
