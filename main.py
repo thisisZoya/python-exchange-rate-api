@@ -1,22 +1,10 @@
-import requests
 import json
 from khayyam import JalaliDatetime
 from datetime import datetime, timedelta
-
-from config import url, rules
-from mail import send_smtp_email
+from config import rules, API_KEY
 from notification import send_msg
 import os
-
-def get_rates():
-    """
-    send a get requests to the fixer.io api and get live rates
-    :return: request.Response instance
-    """
-    response = requests.get(url)
-    if response.status_code == 200:
-        return json.loads(response.text)
-    return None
+from fixer import get_rates
 
 
 def archive(filename, rates):
@@ -83,7 +71,7 @@ def send_notification(msg):
 
 
 if __name__ == "__main__":
-    res = get_rates()
+    res = get_rates(API_KEY)
 
     if rules['archive']:
         archive(res['timestamp'], res['rates'])
